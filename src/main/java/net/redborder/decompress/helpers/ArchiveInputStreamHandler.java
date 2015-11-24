@@ -1,3 +1,4 @@
+/*
 package net.redborder.decompress.helpers;
 
 import java.io.ByteArrayInputStream;
@@ -10,9 +11,11 @@ import net.sf.sevenzipjbinding.ISequentialOutStream;
 import net.sf.sevenzipjbinding.SevenZipException;
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem;
 
+*/
 /**
  * Created by Fernando Dominguez on 17/11/15.
- */
+ *//*
+
 
 public class ArchiveInputStreamHandler {
 
@@ -59,3 +62,4 @@ public class ArchiveInputStreamHandler {
         return out.toString();
     }
 }
+*/

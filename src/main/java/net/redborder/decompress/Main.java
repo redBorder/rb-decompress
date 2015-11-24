@@ -1,6 +1,6 @@
 package net.redborder.decompress;
 
-import net.redborder.decompress.UniversalDecompressor;
+import net.redborder.apache.commons.compress.PasswordRequiredException;
 import net.redborder.decompress.models.ArchiveFile;
 
 import java.io.File;
@@ -10,6 +10,10 @@ import java.util.List;
 /**
  * Created by Fernando Dominguez on 05/11/15.
  */
+
+/*
+* Just a main to test some stuff
+* */
 public class Main {
 
     public static void main(String[] args){
@@ -25,8 +29,10 @@ public class Main {
                 file.calculateSha256();
             }
             System.out.println(files);
-        }catch (IOException e){
+        } catch (PasswordRequiredException e){
+            System.err.println("Decompression failed due to encryption");
+        } catch (IOException e){
             e.printStackTrace();
-        };
+        }
     }
 }

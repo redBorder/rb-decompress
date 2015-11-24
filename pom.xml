@@ -12,19 +12,7 @@
         <dependency>
             <groupId>net.redborder.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.11-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.sevenzipjbinding</groupId>
-            <artifactId>sevenzipjbinding</artifactId>
-            <version>9.20-2.00beta</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.sevenzipjbinding</groupId>
-            <artifactId>sevenzipjbinding-all-platforms</artifactId>
-            <version>9.20-2.00beta</version>
+            <version>1.10</version>
         </dependency>
 
         <dependency>
@@ -48,7 +36,6 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

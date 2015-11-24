@@ -3,6 +3,7 @@ package net.redborder.decompress.implementations;
 import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.rarfile.FileHeader;
+import net.redborder.apache.commons.compress.PasswordRequiredException;
 import net.redborder.decompress.AbstractDecompressor;
 import net.redborder.decompress.Decompressor;
 import net.redborder.decompress.models.ArchiveFile;
@@ -27,9 +28,9 @@ public class RarDecompressor extends AbstractDecompressor implements Decompresso
         super(archive, outputDir);
     }
 
-/* Public methods */
+    /* Public methods */
 
-    public List<ArchiveFile> decompress(){
+    public List<ArchiveFile> decompress() throws PasswordRequiredException{
         List<ArchiveFile> files = null;
         if (outputDir != null) files = extractArchive(archive, outputDir);
         else files = extractArchive(archive);
@@ -38,7 +39,7 @@ public class RarDecompressor extends AbstractDecompressor implements Decompresso
 
     /* Private methods */
 
-    private List<ArchiveFile> extractArchive(File archive, File destination) {
+    private List<ArchiveFile> extractArchive(File archive, File destination) throws PasswordRequiredException{
         outputDir.mkdirs();
         List<ArchiveFile> files = new ArrayList<ArchiveFile>();
         Archive arch = null;
@@ -61,9 +62,9 @@ public class RarDecompressor extends AbstractDecompressor implements Decompresso
                     break;
                 }
                 if (fileHeader.isEncrypted()) {
-                    logger.warn("File is encrypted cannot extract: "
-                            + fileHeader.getFileNameString());
-                    continue;
+                    // Next files could not be encrypted
+                    // but that's the best way I can think of
+                    throw new PasswordRequiredException(archive.getName());
                 }
                 logger.info("Extracting: " + fileHeader.getFileNameString());
                 try {
@@ -87,7 +88,7 @@ public class RarDecompressor extends AbstractDecompressor implements Decompresso
         return files;
     }
 
-    private List<ArchiveFile> extractArchive(File archive) {
+    private List<ArchiveFile> extractArchive(File archive) throws PasswordRequiredException{
         List<ArchiveFile> files = new ArrayList<ArchiveFile>();
         Archive arch = null;
         try {
@@ -109,9 +110,7 @@ public class RarDecompressor extends AbstractDecompressor implements Decompresso
                     break;
                 }
                 if (fileHeader.isEncrypted()) {
-                    logger.warn("File is encrypted cannot extract: "
-                            + fileHeader.getFileNameString());
-                    continue;
+                    throw new PasswordRequiredException(archive.getName());
                 }
                 logger.info("Extracting: " + fileHeader.getFileNameString());
                 try {

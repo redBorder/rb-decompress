@@ -2,6 +2,8 @@ package net.redborder.decompress;
 
 import eu.medsea.mimeutil.MimeType;
 import eu.medsea.mimeutil.MimeUtil;
+import net.redborder.apache.commons.compress.PasswordRequiredException;
+import net.redborder.apache.commons.compress.archivers.zip.UnsupportedZipFeatureException;
 import net.redborder.decompress.helpers.ClassHelper;
 import net.redborder.decompress.helpers.FileHelper;
 import net.redborder.decompress.implementations.RarDecompressor;
@@ -27,9 +29,13 @@ public class UniversalDecompressor{
 
     /* Public static methods (public interface) */
 
-    public static List<ArchiveFile> decompress(File source) throws IOException {
+    public static List<ArchiveFile> decompress(File source) throws IOException, PasswordRequiredException {
+
+        List<ArchiveFile> files = null;
         String where = DECOMPRESS_ON_DEFAULT_LOCATION ? FileHelper.defaultExtractFolderFor(source) : null;
-        return decompress(source, where);
+        files = decompress(source, where);
+
+        return files;
     }
 
     public static List<ArchiveFile> decompress(File source, String where) throws IOException {

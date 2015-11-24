@@ -1,5 +1,7 @@
 package net.redborder.decompress.implementations;
 
+import net.redborder.apache.commons.compress.PasswordRequiredException;
+import net.redborder.apache.commons.compress.archivers.zip.UnsupportedZipFeatureException;
 import net.redborder.decompress.AbstractDecompressor;
 import net.redborder.decompress.Decompressor;
 import net.redborder.decompress.helpers.FileHelper;
@@ -33,14 +35,18 @@ public class ZipDecompressor extends AbstractDecompressor implements Decompresso
 
     /* Public methods */
 
-    public List<ArchiveFile> decompress(){
+    public List<ArchiveFile> decompress() throws PasswordRequiredException{
 
         List<ArchiveFile> files = null;
         try{
             ZipFile zipFile = new ZipFile(archive);
             if (outputDir != null) files = decompressZip(zipFile, outputDir.getAbsolutePath());
             else files = decompressZip(zipFile);
-        }catch (IOException e){
+        } catch (UnsupportedZipFeatureException e) {
+            // Zip encryption is not supported by Apache Commons Compress
+            // This is the best way of guessing if the zip is encrypted so far
+            throw new PasswordRequiredException(archive.getName());
+        } catch (IOException e){
             logger.error("IOException while trying to decompress " + archive.getName(), e);
         }
         return files;
