@@ -12,6 +12,14 @@
         <tag>HEAD</tag>
     </scm>
 
+    <repositories>
+        <repository>
+            <id>internal</id>
+            <name>redBorder Internal Repository</name>
+            <url>http://archiva.redborder.lan/repository/internal/</url>
+        </repository>
+    </repositories>
+
     <distributionManagement>
         <repository>
             <id>internal</id>
