@@ -1,15 +1,13 @@
 package net.redborder.decompress.implementations;
 
+import net.redborder.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import net.redborder.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import net.redborder.decompress.AbstractDecompressor;
 import net.redborder.decompress.Decompressor;
 import net.redborder.decompress.constants.General;
 import net.redborder.decompress.models.ArchiveFile;
-import net.redborder.apache.commons.compress.archivers.ArchiveEntry;
-import net.redborder.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import net.redborder.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 

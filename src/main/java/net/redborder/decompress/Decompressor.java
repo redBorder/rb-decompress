@@ -1,7 +1,6 @@
 package net.redborder.decompress;
 
 import net.redborder.apache.commons.compress.PasswordRequiredException;
-import net.redborder.decompress.exceptions.PasswordProtectedException;
 import net.redborder.decompress.models.ArchiveFile;
 
 import java.util.List;

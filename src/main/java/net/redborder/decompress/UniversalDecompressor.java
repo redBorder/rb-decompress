@@ -3,7 +3,6 @@ package net.redborder.decompress;
 import eu.medsea.mimeutil.MimeType;
 import eu.medsea.mimeutil.MimeUtil;
 import net.redborder.apache.commons.compress.PasswordRequiredException;
-import net.redborder.apache.commons.compress.archivers.zip.UnsupportedZipFeatureException;
 import net.redborder.decompress.helpers.ClassHelper;
 import net.redborder.decompress.helpers.FileHelper;
 import net.redborder.decompress.implementations.RarDecompressor;

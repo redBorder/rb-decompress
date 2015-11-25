@@ -8,7 +8,10 @@ import net.redborder.decompress.AbstractDecompressor;
 import net.redborder.decompress.Decompressor;
 import net.redborder.decompress.models.ArchiveFile;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;

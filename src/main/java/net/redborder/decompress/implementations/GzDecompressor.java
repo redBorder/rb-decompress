@@ -1,13 +1,13 @@
 package net.redborder.decompress.implementations;
 
 import eu.medsea.mimeutil.MimeType;
+import net.redborder.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import net.redborder.decompress.AbstractDecompressor;
 import net.redborder.decompress.Decompressor;
 import net.redborder.decompress.constants.Extensions;
 import net.redborder.decompress.constants.General;
 import net.redborder.decompress.helpers.FileHelper;
 import net.redborder.decompress.models.ArchiveFile;
-import net.redborder.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import java.io.*;
 import java.util.ArrayList;
