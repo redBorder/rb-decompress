@@ -34,8 +34,9 @@
     </distributionManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>net.redborder.apache.commons</groupId>
+
+       <dependency>
+           <groupId>net.redborder.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>1.10</version>
         </dependency>
