@@ -6,9 +6,13 @@ import com.github.junrar.rarfile.FileHeader;
 import net.redborder.apache.commons.compress.PasswordRequiredException;
 import net.redborder.decompress.AbstractDecompressor;
 import net.redborder.decompress.Decompressor;
+import net.redborder.decompress.helpers.FileHelper;
 import net.redborder.decompress.models.ArchiveFile;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +34,12 @@ public class RarDecompressor extends AbstractDecompressor implements Decompresso
 
     /* Public methods */
 
-    public List<ArchiveFile> decompress() throws PasswordRequiredException{
+    public net.redborder.decompress.models.Archive decompress() throws PasswordRequiredException{
         List<ArchiveFile> files = null;
         if (outputDir != null) files = extractArchive(archive, outputDir);
         else files = extractArchive(archive);
-        return files;
+        return new net.redborder.decompress.models.Archive(FileHelper.fileToCompressionType(archive), files,
+                                                            FileHelper.getMimeTypes(archive));
     }
 
     /* Private methods */
