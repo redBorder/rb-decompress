@@ -7,6 +7,7 @@ import net.redborder.decompress.Decompressor;
 import net.redborder.decompress.constants.Extensions;
 import net.redborder.decompress.constants.General;
 import net.redborder.decompress.helpers.FileHelper;
+import net.redborder.decompress.models.Archive;
 import net.redborder.decompress.models.ArchiveFile;
 
 import java.io.*;
@@ -30,7 +31,7 @@ public class GzDecompressor extends AbstractDecompressor implements Decompressor
 
     /* Public methods */
 
-    public List<ArchiveFile> decompress() {
+    public Archive decompress() {
         List<ArchiveFile> files = null;
         try{
             FileInputStream fileInputStream = new FileInputStream(archive);
@@ -40,13 +41,14 @@ public class GzDecompressor extends AbstractDecompressor implements Decompressor
         }catch (IOException e){
             e.printStackTrace();
         }
-        return files;
+        return new Archive(FileHelper.fileToCompressionType(archive), files,
+                            FileHelper.getMimeTypes(archive));
     }
 
     /* Private methods */
 
     private List<ArchiveFile> decompressGzip(GzipCompressorInputStream inputStream, String output) throws IOException {
-        List<ArchiveFile> files = new ArrayList<ArchiveFile>();
+        Archive archive = null;
         FileOutputStream out = new FileOutputStream(output);
         ByteArrayOutputStream content = new ByteArrayOutputStream();
         final byte[] buffer = new byte[General.BUFFER_SIZE];
@@ -65,16 +67,21 @@ public class GzDecompressor extends AbstractDecompressor implements Decompressor
         if ( FileHelper.checkMime(decompressed, new MimeType(Extensions.TAR_MIMETYPE)) ){
 
             Decompressor tarDecompressor = new TarDecompressor(decompressed);
-            files = tarDecompressor.decompress();
+            archive = tarDecompressor.decompress();
 
             // delete the .tar file
             File tar = new File(output);
             tar.delete();
         } else{
-            files.add( new ArchiveFile(decompressed.getName(), content.toByteArray()) );
+            List<ArchiveFile> files = new ArrayList<ArchiveFile>();
+            files.add(new ArchiveFile(decompressed.getName(), content.toByteArray()));
+            archive = new Archive(
+                    FileHelper.fileToCompressionType(this.archive),
+                    files
+            );
         }
         out.close();
-        return files;
+        return archive.getFiles();
     }
 
     private List<ArchiveFile> decompressGzip(String filename, GzipCompressorInputStream inputStream) throws IOException {

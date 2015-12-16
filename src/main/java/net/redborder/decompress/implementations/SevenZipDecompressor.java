@@ -5,6 +5,8 @@ import net.redborder.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 import net.redborder.apache.commons.compress.archivers.sevenz.SevenZFile;
 import net.redborder.decompress.AbstractDecompressor;
 import net.redborder.decompress.Decompressor;
+import net.redborder.decompress.helpers.FileHelper;
+import net.redborder.decompress.models.Archive;
 import net.redborder.decompress.models.ArchiveFile;
 
 import java.io.File;
@@ -30,7 +32,7 @@ public class SevenZipDecompressor extends AbstractDecompressor implements Decomp
 
     /* Public methods */
 
-    public List<ArchiveFile> decompress() throws PasswordRequiredException{
+    public Archive decompress() throws PasswordRequiredException{
         List<ArchiveFile> files = null;
         try{
             SevenZFile sevenZFile = new SevenZFile(archive);
@@ -41,7 +43,8 @@ public class SevenZipDecompressor extends AbstractDecompressor implements Decomp
         } catch (IOException e){
             e.printStackTrace();
         }
-        return files;
+        return new Archive(FileHelper.fileToCompressionType(archive), files,
+                            FileHelper.getMimeTypes(archive));
     }
 
     /* Private methods */

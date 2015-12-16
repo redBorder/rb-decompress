@@ -4,6 +4,7 @@ import eu.medsea.mimeutil.MimeException;
 import eu.medsea.mimeutil.MimeType;
 import eu.medsea.mimeutil.MimeUtil;
 import net.redborder.decompress.constants.Extensions;
+import net.redborder.decompress.models.CompressionType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +19,8 @@ import java.util.regex.Pattern;
  * Created by Fernando Domínguez on 06/11/15.
  */
 public class FileHelper {
+
+    public static boolean mimeDetectorRegistered = false;
 
     // Returns the name for a file without extension
     public static String nameFromFile(File file){
@@ -49,37 +52,94 @@ public class FileHelper {
         }
     }
 
-    public static String mimeTypeToExtension(Collection<MimeType> mimeTypes){
+    public static String mimeTypeToExtension(String mimeType){
         String extension = null;
 
-        for (MimeType mimeType : mimeTypes){
-            if (mimeType.toString().equals(Extensions.ZIP_MIMETYPE)){
-                extension = Extensions.ZIP_EXTENSION;
-            }else if (mimeType.toString().equals(Extensions.RAR_MIMETYPE)){
-                extension = Extensions.RAR_EXTENSION;
-            }else if (mimeType.toString().equals(Extensions.TAR_MIMETYPE)){
-                extension = Extensions.TAR_EXTENSION;
-            }else if (mimeType.toString().equals(Extensions.GZIP_MIMETYPE)){
-                extension = Extensions.GZIP_EXTENSION;
-            }else if (mimeType.toString().equals(Extensions.SEVENZIP_MIMETYPE)){
-                extension = Extensions.SEVENZIP_EXTENSION;
-            }
-
-            // Break the loop if a match is found
-            if (extension != null) break;
-        }
-
-        if (extension == null){
-            throw new MimeException("Mime type not recognized");
+        if (mimeType.equals(Extensions.ZIP_MIMETYPE)){
+            extension = Extensions.ZIP_EXTENSION;
+        }else if (mimeType.equals(Extensions.RAR_MIMETYPE)){
+            extension = Extensions.RAR_EXTENSION;
+        }else if (mimeType.equals(Extensions.TAR_MIMETYPE)){
+            extension = Extensions.TAR_EXTENSION;
+        }else if (mimeType.equals(Extensions.GZIP_MIMETYPE)){
+            extension = Extensions.GZIP_EXTENSION;
+        }else if (mimeType.equals(Extensions.SEVENZIP_MIMETYPE)){
+            extension = Extensions.SEVENZIP_EXTENSION;
         }
 
         return extension;
     }
 
+    public static String mimeTypeToExtension(Collection<MimeType> mimeTypes){
+        String extension = null;
+
+        for (MimeType mimeType : mimeTypes){
+
+            extension = mimeTypeToExtension(mimeType.toString());
+            // Break the loop if a match is found
+            if (extension != null) break;
+        }
+
+        return extension;
+    }
+
+    /**
+     * Returns the compression type for a given file
+     * @param file The file
+     * @return the compression type
+     */
+    public static CompressionType fileToCompressionType(File file){
+        CompressionType compressionType = null;
+        Collection<MimeType> mimeTypes = FileHelper.getMimeTypes(file);
+        compressionType = mimeToCompressionType(mimeTypes);
+
+        if (compressionType == null){
+            compressionType = new CompressionType(FileHelper.extensionFromFile(file),
+                    (MimeType) mimeTypes.toArray()[0]);
+        }
+
+        return compressionType;
+    }
+
+    /**
+     * Returns the compression type for a given mime type
+     * @param mimeTypes A list of mime types for a file
+     * @return the compression type
+     */
+    private static CompressionType mimeToCompressionType(Collection<MimeType> mimeTypes){
+        CompressionType compressionType = null;
+
+        for (MimeType mimeType : mimeTypes){
+            if (mimeType.toString().equals(Extensions.ZIP_MIMETYPE)){
+                compressionType = new CompressionType(Extensions.ZIP_EXTENSION, mimeType);
+            }else if (mimeType.toString().equals(Extensions.RAR_MIMETYPE)){
+                compressionType = new CompressionType(Extensions.RAR_EXTENSION, mimeType);
+            }else if (mimeType.toString().equals(Extensions.TAR_MIMETYPE)){
+                compressionType = new CompressionType(Extensions.TAR_EXTENSION, mimeType);
+            }else if (mimeType.toString().equals(Extensions.GZIP_MIMETYPE)){
+                compressionType = new CompressionType(Extensions.GZIP_EXTENSION, mimeType);
+            }else if (mimeType.toString().equals(Extensions.SEVENZIP_MIMETYPE)){
+                compressionType = new CompressionType(Extensions.SEVENZIP_EXTENSION, mimeType);
+            }
+
+            // Break the loop if a match is found
+            if (compressionType != null) break;
+        }
+
+        return compressionType;
+    }
+
+    /**
+    * Returns the mime types for a file
+    * */
     public static Collection<MimeType> getMimeTypes(File file){
+        registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
         return (Collection<MimeType>) MimeUtil.getMimeTypes(file);
     }
 
+    /**
+    * Checks that a file corresponds to the given mime type
+    * */
     public static boolean checkMime(File file, MimeType mimeType){
         Collection<MimeType> mimeTypes = FileHelper.getMimeTypes(file);
         return mimeTypes.contains(mimeType);
@@ -122,5 +182,12 @@ public class FileHelper {
                     .substring(1));
         }
         return stringBuffer.toString();
+    }
+
+    private static void registerMimeDetector(String detectorClass){
+        if (!mimeDetectorRegistered) {
+            MimeUtil.registerMimeDetector(detectorClass);
+            mimeDetectorRegistered = true;
+        }
     }
 }

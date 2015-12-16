@@ -5,6 +5,8 @@ import net.redborder.apache.commons.compress.archivers.tar.TarArchiveInputStream
 import net.redborder.decompress.AbstractDecompressor;
 import net.redborder.decompress.Decompressor;
 import net.redborder.decompress.constants.General;
+import net.redborder.decompress.helpers.FileHelper;
+import net.redborder.decompress.models.Archive;
 import net.redborder.decompress.models.ArchiveFile;
 
 import java.io.*;
@@ -28,7 +30,7 @@ public class TarDecompressor extends AbstractDecompressor implements Decompresso
 
     /* Public methods */
 
-    public List<ArchiveFile> decompress() {
+    public Archive decompress() {
         List<ArchiveFile> files = null;
         try{
             TarArchiveInputStream tarInput = new TarArchiveInputStream(new FileInputStream(archive));
@@ -37,7 +39,8 @@ public class TarDecompressor extends AbstractDecompressor implements Decompresso
         }catch (IOException e){
             e.printStackTrace();
         }
-        return files;
+        return new Archive(FileHelper.fileToCompressionType(archive), files,
+                            FileHelper.getMimeTypes(archive));
     }
 
     /* Private methods */

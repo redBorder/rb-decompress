@@ -7,7 +7,9 @@ import net.redborder.apache.commons.compress.archivers.zip.ZipFile;
 import net.redborder.apache.commons.compress.utils.IOUtils;
 import net.redborder.decompress.AbstractDecompressor;
 import net.redborder.decompress.Decompressor;
+import net.redborder.decompress.helpers.FileHelper;
 import net.redborder.decompress.helpers.StreamHelper;
+import net.redborder.decompress.models.Archive;
 import net.redborder.decompress.models.ArchiveFile;
 
 import java.io.*;
@@ -32,7 +34,7 @@ public class ZipDecompressor extends AbstractDecompressor implements Decompresso
 
     /* Public methods */
 
-    public List<ArchiveFile> decompress() throws PasswordRequiredException{
+    public Archive decompress() throws PasswordRequiredException{
 
         List<ArchiveFile> files = null;
         try{
@@ -46,7 +48,8 @@ public class ZipDecompressor extends AbstractDecompressor implements Decompresso
         } catch (IOException e){
             logger.error("IOException while trying to decompress " + archive.getName(), e);
         }
-        return files;
+        return new Archive(FileHelper.fileToCompressionType(archive), files,
+                            FileHelper.getMimeTypes(archive));
     }
 
     /* Private methods */
