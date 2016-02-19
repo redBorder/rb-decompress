@@ -36,8 +36,7 @@ public class ArchiveFile{
     public byte[] getContent(){ return this.content; }
 
     public String calculateSha256(){
-        sha256 = calculateHash("SHA-256");
-        return sha256;
+        return calculateHash("SHA-256");
     }
 
     public String getRelativePath() {
@@ -49,6 +48,7 @@ public class ArchiveFile{
     }
 
     public String getSha256() {
+        if (sha256 == null) sha256 = calculateSha256();
         return sha256;
     }
 
