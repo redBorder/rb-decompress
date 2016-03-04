@@ -2,6 +2,7 @@ package net.redborder.decompress.models;
 
 import eu.medsea.mimeutil.MimeType;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,12 +16,14 @@ public class Archive {
 
     public Archive(CompressionType compressionType, List<ArchiveFile> files) {
         this.compressionType = compressionType;
-        this.files = files;
+        if (files != null) this.files = files;
+        else this.files = new ArrayList<ArchiveFile>();
     }
 
     public Archive(CompressionType compressionType, List<ArchiveFile> files, Collection<MimeType> mimeType) {
         this.compressionType = compressionType;
-        this.files = files;
+        if (files != null) this.files = files;
+        else this.files = new ArrayList<ArchiveFile>();
         this.mimeTypes = mimeType;
     }
 
